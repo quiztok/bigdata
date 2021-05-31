@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "proto.agent";
+
+service Agent{
+
+	//Node
+	//Redis BlockHash 정보 쓰기(현재는 사용되지 않음)
+	rpc NodeWriteRedis(BlockRequest)returns(BlockResponse){}
+	//Redis BlockHash 정보 읽기
+	rpc NodeReadRedis(BlockRequest)returns(BlockResponse){}
+	
+	//API
+	//Redis BlockHash 정보 쓰기
+	rpc ApiWriteRedis(BlockRequest)returns(BlockResponse){}
+	//Redis BlockHash 정보 읽기
+	rpc ApiReadRedis(BlockRequest)returns(BlockResponse){}
+}
+
+//Message 필요
+message BlockRequest{
+	string blockHash = 1;
+	int32 count = 2;
+	int64 timestamp = 3;
+	string nodeName = 4;
+}
+
+message BlockResponse{
+	string blockHash = 1;
+	int64 timestamp = 2;
+	string nodeName = 3;
+	BlockStatus status = 4;
+}
+
+enum BlockStatus{
+
+	//에이전트 검증 count가 0이 아닐경우
+	VERIFY_AGENT = 0;
+	//검색성공
+	SEARCH_SUCCESS = 1;
+	//검색실패
+	SEARCH_FAIL = 2;
+	
+	//쓰기 성공
+	WRITE_SUCCESS = 10;
+	//쓰기 실패
+	WRITE_FAIL = 20;
+	//업데이트 성공
+	UPDATE_SUCCESS = 30;
+	//업데이트 실패
+	UPDATE_FAIL = 40;
+	
+	//삭제 성공
+	DELETE_SUCCESS = 50;
+	//삭제 실패
+	DELETE_FAIL = 60;
+	
+	//Protocol CPU사용량 50% 이상
+	PROTOCOL_CPU_ORMORE = 70;
+	
+	
+}

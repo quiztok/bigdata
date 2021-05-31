@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+	<xs:element name="VIA_chain" type="block" />
+
+	<xs:complexType name="blockList">
+		<xs:sequence>
+			<xs:element name="blockList" type="block" minOccurs="0"
+				maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="resultMessage">
+		<xs:sequence>
+			<xs:element name="status" type="xs:int" />
+			<xs:element name="message" type="xs:string" minOccurs="0" />
+			<xs:element name="result" type="xs:anyType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="blocks" type="block" minOccurs="0"
+				maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+
+ <xs:complexType name="block">
+    <xs:sequence>
+      <xs:element name="hash" type="xs:string" minOccurs="0"/>
+      <xs:element name="type" type="xs:string" minOccurs="0"/>
+      <xs:element name="nodeName" type="xs:string" minOccurs="0"/>
+      <xs:element name="previousHash" type="xs:string" minOccurs="0"/>
+      <xs:element name="previousTypeHash" type="xs:string" minOccurs="0"/>
+      <xs:element name="timestamp" type="xs:long"/>
+      <xs:element name="transaction" type="transaction" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="transaction" abstract="true">
+    <xs:sequence>
+      <xs:element name="encrypt" type="xs:string" minOccurs="0"/>
+      <xs:element name="previousLinkHash" type="xs:string" default=""/>
+      <xs:element name="version" type="xs:string" default="1.0"/>
+      <xs:element name="transactionObject">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="entry" minOccurs="0" maxOccurs="unbounded">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="key" minOccurs="0" type="xs:string"/>
+                  <xs:element name="value" minOccurs="0" type="xs:string"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  
+  
+  <xs:complexType name="genesisTransaction">
+    <xs:complexContent>
+         <xs:extension base="transaction">
+        <xs:sequence>
+          <xs:element name="masterKey" type="xs:string"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="typeTransaction">
+    <xs:complexContent>
+      <xs:extension base="transaction">
+        <xs:sequence>
+          <xs:element name="typeName" type="xs:string" minOccurs="0"/>
+          <xs:element name="content" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  <xs:complexType name="kycTransaction">
+    <xs:complexContent>
+      <xs:extension base="transaction">
+        <xs:sequence>
+          <xs:element name="email" type="xs:string" minOccurs="0"/>
+          <xs:element name="name" type="xs:string" minOccurs="0"/>
+          <xs:element name="privateKey" type="xs:string" minOccurs="0"/>
+          <xs:element name="deactivate" type="xs:boolean" default="false"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  <xs:complexType name="serviceTransaction">
+    <xs:complexContent>
+      <xs:extension base="transaction">
+        <xs:sequence>
+          <xs:element name="kycBlockHash" type="xs:string" minOccurs="0"/>
+          <xs:element name="serviceCode" type="xs:string" minOccurs="0"/>
+          <xs:element name="serviceSign" type="xs:string" minOccurs="0"/>
+          <xs:element name="deactivate" type="xs:boolean" default="false"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="authTransaction">
+    <xs:complexContent>
+      <xs:extension base="transaction">
+        <xs:sequence>
+          <xs:element name="kycBlockHash" type="xs:string" minOccurs="0"/>
+          <xs:element name="authType" type="xs:string" minOccurs="0"/>
+          <xs:element name="sourceType" type="xs:string" minOccurs="0"/>
+          <xs:element name="serviceCode" type="xs:string" minOccurs="0"/>
+          <xs:element name="authId" type="xs:string" minOccurs="0"/>
+          <xs:element name="deactivate" type="xs:boolean" default="false"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="accountTransaction">
+    <xs:complexContent>
+      <xs:extension base="transaction">
+        <xs:sequence>
+          <xs:element name="kycBlockHash" type="xs:string" minOccurs="0"/>
+          <xs:element name="type" type="xs:string" minOccurs="0"/>
+          <xs:element name="nickname" type="xs:string" minOccurs="0"/>
+          <xs:element name="accountAddress" type="xs:string" minOccurs="0"/>
+          <xs:element name="currencyCode" type="xs:string" minOccurs="0"/>
+          <xs:element name="accuracy" type="xs:int"/>
+          <xs:element name="value" type="xs:decimal" minOccurs="0"/>
+          <xs:element name="deactivate" type="xs:boolean" default="false"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  <xs:complexType name="profileTransaction">
+    <xs:complexContent>
+      <xs:extension base="transaction">
+        <xs:sequence>
+          <xs:element name="kycBlockHash" type="xs:string" minOccurs="0"/>
+          <xs:element name="deactivate" type="xs:boolean" default="false"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  <xs:complexType name="contentTransaction">
+    <xs:complexContent>
+      <xs:extension base="transaction">
+        <xs:sequence>
+         <xs:element name="kycBlockHash" type="xs:string" minOccurs="0"/>
+         <xs:element name="type" type="xs:string" minOccurs="0"/>
+         <xs:element name="subject" type="xs:string" minOccurs="0"/>
+         <xs:element name="bannerImg" type="xs:string" minOccurs="0"/>
+         <xs:element name="quizzes" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+         <xs:element name="state" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  <xs:complexType name="publishTransaction">
+    <xs:complexContent>
+      <xs:extension base="transaction">
+        <xs:sequence>
+         <xs:element name="contentBlockHash" type="xs:string"/>
+         <xs:element name="kycBlockHash" type="xs:string"/>
+         <xs:element name="republish" type="xs:int" default="0"/>
+         <xs:element name="state" type="xs:string" minOccurs="0"/>
+         <xs:element name="term" type="xs:long" minOccurs="0"/>
+         <xs:element name="expiryDate" type="xs:long" minOccurs="0"/>
+         <xs:element name="deactivate" type="xs:boolean" default="false"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="ledgerTransaction">
+    <xs:complexContent>
+      <xs:extension base="transaction">
+        <xs:sequence>
+          <xs:element name="type" type="xs:string"/>
+          <xs:element name="fromAddress" type="xs:string"/>
+          <xs:element name="fromAccountBlockHash" type="xs:string"/>
+          <xs:element name="to" type="to" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+   <xs:complexType name="to">
+    <xs:sequence>
+      <xs:element name="address" type="xs:string" minOccurs="0"/>
+      <xs:element name="accountBlockHash" type="xs:string" minOccurs="0"/>
+      <xs:element name="fromValue" type="xs:decimal" minOccurs="0"/>
+      <xs:element name="toValue" type="xs:decimal" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>
+

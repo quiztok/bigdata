@@ -1,0 +1,17 @@
+{
+	"webHostFilter":["123.123.123.123","123.123.123.123","123.123.123.123"],
+	"agentHost" : "localhost",
+	"agentPort" : 9290,
+	"usingAgent" : false,
+	"usingBalancing" : false,
+	"usingRedis" : false,
+	"NodeHost" : "localhost",
+	"NodePort" : 9090,
+	"usingFilter" : false,
+	"retry" : 3,
+	"protocolInfoFilePath" : "/home/protocolInfo",
+	"protocolInfoFileName" : "protocolInfo",
+	"protocolCpuPercent" : 50.0,
+	"logLevel" : "info",
+	"version" : 1.0
+}

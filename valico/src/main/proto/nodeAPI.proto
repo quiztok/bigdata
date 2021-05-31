@@ -1,0 +1,190 @@
+syntax = "proto3";
+ 
+option java_multiple_files = true;
+option java_package = "proto.node";
+
+service NodeAPIService {
+//회원가입
+rpc createKyc(NodeRequest) returns (NodeResponse){}
+//로그인
+rpc searchKyc(NodeRequest) returns (NodeResponse){}
+//회원탈퇴
+rpc deactivate(NodeRequest) returns (NodeResponse){}	//보류
+//pin번호 변경
+rpc changePin(NodeRequest) returns(NodeResponse){}	//보류
+
+
+//service
+rpc createService(NodeRequest) returns (NodeResponse) {}
+rpc searchService(NodeRequest) returns (NodeResponse) {}
+
+//auth
+rpc createAuth(NodeRequest) returns (NodeResponse) {}
+rpc searchAuth(NodeRequest) returns (NodeResponse) {}
+rpc updateAuthForKYC(NodeRequest) returns (NodeResponse) {}
+
+
+//account
+rpc createAccount(NodeRequest) returns (NodeResponse){}
+rpc searchAccountByKYCHash(NodeRequest) returns(NodeResponse){}
+rpc searchAccountByAccountAddress(NodeRequest) returns (NodeResponse){}
+rpc updateAccountForAccuracy(NodeRequest) returns (NodeResponse) {}
+rpc updateAccountForLedger(NodeRequest) returns (NodeResponse) {}
+rpc updateAccountForCharge(NodeRequest) returns (NodeResponse) {}
+
+
+
+//profile
+rpc createProfile(NodeRequest) returns (NodeResponse) {}
+rpc searchProfile(NodeRequest) returns (NodeResponse) {}
+
+//content
+rpc createContent(NodeRequest) returns (NodeResponse) {}
+rpc searchContentByBlockHash(NodeRequest) returns (NodeResponse) {}
+rpc searchContentAll(NodeRequest) returns (NodeResponse) {}
+
+
+//publish
+rpc createPublish(NodeRequest) returns (NodeResponse) {}
+rpc searchPublishByBlockHash(NodeRequest) returns (NodeResponse) {}
+rpc searchPublishAll(NodeRequest) returns (NodeResponse) {}
+
+
+//ledger
+rpc createLedger(NodeRequest) returns (NodeResponse) {}
+rpc searchLedger(NodeRequest) returns (NodeResponse){}
+
+
+//kyc변동으로인한 갱신
+rpc updateAccountForKYC(NodeRequest) returns (NodeResponse) {}
+//거래내역
+//거래
+//rpc transaction(TransactionRequest) returns (NodeResponse){}
+//연결노드 검색
+
+//rpc searchNode(SearchRequest) returns (SearchResponse){}
+//관리자 모니터
+rpc monitor(Monitor) returns (NodeResponse){}
+rpc monitorUpdate(Monitor) returns (NodeResponse) {}
+}
+
+message NodeRequest{
+	KycMessage kycMessage = 1;
+	string email = 2;
+	string phoneNumber = 4;
+	AuthMessage authMessage = 31;
+	ServiceMessage serviceMessage = 331;
+	AccountMessage accountMessage = 333;
+	ContentMessage contentMessage = 334;
+	PublishMessage publishMessage = 336;
+	LedgerMessage ledgerMessage = 338;
+	repeated string accountTypeName = 5;
+	repeated string serviceCode = 332;
+	string accountNickname = 8;
+	string accountAddress = 6;
+	string currencyCode = 33;
+	string privateKey = 7;
+	
+	string KYCBlockHash = 9;
+	string accountBlockHash = 10;
+	string authBlockHash = 32;
+	string contentBlockHash = 335;
+	string publishBlockHash = 337;
+	
+	string ledgerBlockHash = 11;
+	int32 toIndex = 340;
+	bool requireVerify = 20;
+	bool deactivate = 21;
+	
+	string newPin = 22;
+	
+	string version = 101;
+	map<string,string> transactionObject = 102;
+	map<string,string> encryptedTransactionObject = 103;
+	
+}
+ 
+message NodeResponse{
+    ApproachStatus status = 1;
+    bool flag = 4;
+    string privateKey = 2;
+    repeated Block block = 3;
+}
+
+
+
+message KycMessage {
+	string pin = 1;
+	string name = 2;
+}
+
+message ServiceMessage {
+	string serviceCode = 1;
+	string serviceSign = 2;
+}
+
+message AuthMessage {
+	string authType = 1;
+	string sourceType = 2;
+	string serviceCode = 3;
+	string authId = 4;
+}
+
+message AccountMessage {
+	string type = 1;
+	string nickname = 2;
+	string accountAddress = 3;
+	string currencyCode = 4;
+	string value = 5;
+}
+
+message ContentMessage {
+	string type = 1;
+	string subject = 2;
+	string bannerImg = 3;
+	repeated string quiz = 4;
+	string state = 5;
+}
+
+message PublishMessage {
+	int32 republish = 1;
+	string state = 2;
+	int64 term = 3;
+	int64 expirtyDate = 4;
+}
+
+message LedgerMessage {
+	string type = 1;
+	string fromAddress = 2;
+	string fromAccountBlockHash = 3;
+	string fromPrivateKey = 4;
+	repeated To to = 5;
+	message To {
+		string address = 1;
+		string accountBlockHash = 2;
+		string fromValue = 3;
+		string toValue = 4;
+	}
+}
+ 
+message Block{
+    string hash = 1;
+    bytes block = 2;
+}
+
+enum ApproachStatus{
+        SUCCESS = 0;
+        ERROR = 2;
+        TRY_AGAIN = 3;
+        
+        FAIL_PRIVATE_KEY = 21;
+        FAIL_VERIFY = 22;
+    }
+    
+message Monitor{
+    int32 size = 1;
+    string type = 2;
+    string hash = 3;
+    string privateKey = 4;
+}
+ 
